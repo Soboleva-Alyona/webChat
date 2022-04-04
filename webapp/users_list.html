@@ -1,0 +1,14 @@
+
+<h1>All users</h1>
+
+{{ range .Users}}
+
+        <div>
+            {{.Login}}
+            <form action="/add_friend" method="POST">
+                {{if not .IsMyFriend }}
+                    <button name="user_id" type="submit" value="{{.Id}}">Add to friends</button>
+                {{end}}
+            </form>
+        </div>
+{{end}}

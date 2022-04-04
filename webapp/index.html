@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Web Chat</title>
+</head>
+<body>
+
+<h2>Добро пожаловать</h2>
+
+{{ if .is_logged_in }}
+    <a type="button" href="/logout">Выйти</a>
+
+        {{ template "friends_list.html" .}}
+
+        {{ template "users_list.html" .}}
+
+{{ else }}
+
+    <a type="button" href="/enter">Войти</a>
+    |
+    <a type="button" href="/register">Зарегестрироваться</a>
+{{ end }}
+
+</body>
+</html>

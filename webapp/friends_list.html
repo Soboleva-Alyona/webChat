@@ -1,0 +1,23 @@
+
+
+<h1> My friends</h1>
+
+{{ range .friends }}
+    <div>
+        {{ .Login }}
+
+        <a type="button" href="/chat/{{.Id}}">
+            <form action="/chat/{{.Id}}" method="post">
+                <button name="friend_id" value="{{.Id}}">Our chat with {{.Id}}</button>
+            </form>
+        </a>
+
+    </div>
+
+
+{{end}}
+
+{{/*
+ <form action="" method="POST">
+    <button type="submit" name="{{.Id}}">Add to friends</button>
+</form>*/}}

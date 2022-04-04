@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        <div>
+            {{if .Logined}}
+                Hello!
+            {{else}}
+            <form action="enter" method="POST">
+                <input type="login" name="login"/>
+                <input type="password" name="password"/>
+                <button type="submit">Login</button>
+            </form>
+            {{end}}
+        </div>
+
+    </body>
+</html>

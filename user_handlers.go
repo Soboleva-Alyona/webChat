@@ -130,6 +130,20 @@ func doRegisterHandler(c *gin.Context) {
 			fmt.Println("Can't insert user into table")
 		}
 
+		var id int
+		query, e := db.Query(`SELECT id FROM "Users" WHERE login=$1`, username)
+		if e != nil {
+			return
+		}
+		for query.Next() {
+			err = query.Scan(&id)
+			if err != nil {
+				return
+			}
+		}
+
+		userSessionId = id
+
 		token := generateSessionToken()
 		c.SetCookie("token", token, 3600, "", "", false, true)
 		c.SetSameSite(sameSiteCookie)
@@ -163,7 +177,7 @@ func getUsersByLoginAndPass(login, password string) UserData {
 }
 
 func userAlreadyExists(login string) bool {
-	res, e := db.Query(`SELECT FROM "Users" WHERE login=$1`, login)
+	res, e := db.Query(`SELECT * FROM "Users" WHERE login=$1`, login)
 	if e != nil {
 		fmt.Println("Problems with db")
 		return false
@@ -172,6 +186,7 @@ func userAlreadyExists(login string) bool {
 	if !res.Next() {
 		return false
 	}
+
 	return true
 }
 

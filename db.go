@@ -109,3 +109,38 @@ func getUserFriendsList() []UserData {
 		return userFriendsAsUsers
 	}
 }
+
+type Message struct {
+	Content string `json:"content"`
+	Author  string `json:"author"`
+}
+
+func getMessages(friendId, authorId int) []Message {
+	var messages []Message
+	query, err := db.Query(`SELECT content, author FROM "Messages" WHERE friend_id=$1 AND author=$2 OR friend_id=$2 AND author=$1`, friendId, authorId)
+	if err != nil {
+		fmt.Println("Can't get messages")
+	}
+	for query.Next() {
+		var content string
+		var authorMessageId int
+		err := query.Scan(&content, &authorMessageId)
+		if err != nil {
+			fmt.Println(err)
+		}
+		messages = append(messages, Message{content, getUserNameById(authorMessageId)})
+	}
+	return messages
+}
+
+func getUserNameById(id int) string {
+	if id == userSessionId {
+		return "me"
+	}
+	for _, u := range getUsersList() {
+		if u.Id == id {
+			return u.Login
+		}
+	}
+	return ""
+}

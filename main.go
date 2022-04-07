@@ -41,6 +41,8 @@ func main() {
 
 }
 
+var friendSessionId int
+
 func render(c *gin.Context, data gin.H, templateName string) {
 	if userSessionId > 0 {
 		c.Set("is_logged_in", true)
@@ -52,6 +54,7 @@ func render(c *gin.Context, data gin.H, templateName string) {
 	data["user_me"] = userSessionId
 	data["Users"] = getUsersList()
 	data["friend_id"], _ = c.Get("friend_id")
+	data["messages"] = getMessages(friendSessionId, userSessionId)
 
 	switch c.Request.Header.Get("Accept") {
 	case "application/json":
@@ -65,7 +68,5 @@ func render(c *gin.Context, data gin.H, templateName string) {
 		c.HTML(http.StatusOK, templateName, data)
 
 	}
-
-	//c.Redirect(http.StatusFound, "/")
 
 }

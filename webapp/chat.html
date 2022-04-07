@@ -5,12 +5,23 @@
     <title>Title</title>
 </head>
 <body>
+    <header>
+        <a type="button" href="/">На главную страницу</a>
+    </header>
     Our chat
 
-    <a type="button" href="/send_message">
+    {{range .messages}}
+        <div>
+           {{ .Content}}
+            from {{.Author}}
+        </div>
+    {{end}}
 
-        <input type="text" name="message_context">
+    <form action="/chat/{{.friend_id}}" method="post">
+
+        <input type="text" name="message_content">
+
         <button name="friend_id" value="{{.friend_id}}">Send to {{.friend_id}}</button>
-    </a>
+    </form>
 </body>
 </html>

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func doAddFriendHandler(c *gin.Context) {
@@ -26,10 +27,18 @@ func doAddFriendHandler(c *gin.Context) {
 
 func chatWithFriendHandler(c *gin.Context) {
 	// find messages
-	friendId, _ := c.Get("friend_id")
-	chatId := c.PostForm("chat_id")
+	//friendId, _ := c.Get("friend_id")
+
+	//chatId := c.GetInt("chat_id")
+	//c.Set("friend_id", friendId)
+	//c.Set("chat_id", chatId)
+	friendId := c.Param("friend_id")
+	friendSessionId, _ = strconv.Atoi(friendId)
+
 	c.Set("friend_id", friendId)
-	c.Set("chat_id", chatId)
+	friendIdInt, _ := strconv.Atoi(friendId)
+
+	getMessages(friendIdInt, userSessionId)
 
 	render(c, gin.H{}, "chat.html")
 }
@@ -37,11 +46,15 @@ func chatWithFriendHandler(c *gin.Context) {
 func sendMessageToFriendHandler(c *gin.Context) {
 	messageContent := c.PostForm("message_content")
 	authorId := userSessionId
-	chatId, _ := c.Get("chat_id")
-	friendId, _ := c.Get("friend_id")
+	friendId := c.PostForm("friend_id")
+	c.Set("friend_id", friendId)
+	_, err := db.Query(`INSERT INTO "Messages" (friend_id, content, author) VALUES ($1, $2, $3)`,
+		friendId, messageContent, authorId)
+	if err != nil {
+		fmt.Println("Запись не добавлена")
+	}
 
-	db.Query(`INSERT INTO "Messages" (chat_id, content, author) VALUES ($1, $2, $3)`,
-		chatId, messageContent, authorId)
+	render(c, gin.H{}, "chat.html")
 
-	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("/chat/%d", friendId))
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("/chat/%s", friendId))
 }

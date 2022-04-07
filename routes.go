@@ -6,22 +6,20 @@ func initializeRouts() {
 	router.GET("/register-successful", doRegisterHandler)
 	router.POST("/", indexHandler)
 
-	userRoutes := router.Group("/")
-	{
-		userRoutes.GET("/enter", enterHandler)
+	router.GET("/enter", enterHandler)
 
-		userRoutes.POST("/enter", doEnterHandler)
+	router.POST("/enter", doEnterHandler)
 
-		userRoutes.POST("/add_friend", doAddFriendHandler)
+	router.POST("/add_friend", doAddFriendHandler)
 
-		userRoutes.GET("/register", registerHandler)
+	router.GET("/register", registerHandler)
 
-		userRoutes.POST("/register", doRegisterHandler)
+	router.POST("/register", doRegisterHandler)
 
-		userRoutes.GET("/logout", doLogOutHandler)
+	router.GET("/logout", doLogOutHandler)
 
-		userRoutes.GET("/chat/:friend_id", chatWithFriendHandler)
+	router.GET("/chat/:friend_id", chatWithFriendHandler)
 
-		userRoutes.POST("/chat/:friend_id", sendMessageToFriendHandler)
-	}
+	router.POST("/chat/:friend_id", sendMessageToFriendHandler)
+
 }
